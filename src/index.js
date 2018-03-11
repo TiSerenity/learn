@@ -1,25 +1,51 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-// 在组件中,this.props.who,表示who属性
-// 之后使用<Greeting who='world' />，为Greeting组件指定属性who,其值为'world'
-// <Greeting who='react' /> 指定属性who,其值为'react'，参见app组件
 class Greeting extends Component {
+
+  // 这里定义state的初始值
+  // 注意，在类中使用state，必须用this.state
+  state={
+    who:'world'
+  }
+
+  // 这里切换who
+  switchName=()=>{
+    // 如果state的who字段为'world'，则将状态改为'react'
+    // 请注意，setState的参数是一个函数
+    // 该函数有两个参数，第一个是目前的状态，第二个是目前的属性
+    // 该函数可以使用这两个参数，来计算并返回新得状态
+    // setState会提供这两个参数，并调用我们传入得函数，修改state
+    // 重点：修改state后，会自动得更新屏幕
+    if (this.state.who==='world')
+      this.setState((prevState,props)=>({who:'react'}))
+    else
+      this.setState((prevState,props)=>({who:'world'}))
+  }
+
+  //解释：<button onClick={this.switchName}>
+  //<button>是html标记，一个按钮，视作一个组件
+  //onClick={...},onClick是一个属性，指定当我们点击该按钮得时候，要执行哪个事件函数，这里是我们定义得switchName
+
+  // 语法要点: 问号操作符 this.state.who==='world'?'react':'world'
+// 这类似于C中得分支判断
+
   render() {
     return (
       <div>  
-          <h1>{`hello ${this.props.who}`}</h1> 
+          <h1>{`hello ${this.state.who}`}</h1> 
+          <button onClick={this.switchName}> {this.state.who==='world'?'react':'world'}</button>
       </div>
     );
-    // 语法要点1：模板字符串，使用``而非''，可以在其中使用${ }来将变量嵌入
   }
 }
 
-// 组件的另一种定义方式，函数，只要返回jsx即可
-// 这个叫stateless组件
-// 可以处理属性，也可以处理context(今后再讲)，但没有状态(后面描述)
-// 语法要点2：App后面 (参数)=>{} 叫做箭头函数，区别于正常的js函数
 const App=(props,context)=>{
+  // 我们在这里定义两个Greeting组件
+  // 每个都包括一个按钮
+  // 分别点击，可以看到：两个按钮得状态是不同得
+  // 换言之：组件得不同实例，拥有各自得状态，这和通常得类和实例得关系一致
+  // 同时注意，现在为Greeting组件指定who属性，已经没有意义，被忽略
   return (
     <div>
       <Greeting who={'world'} />
